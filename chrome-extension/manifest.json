@@ -9,8 +9,19 @@
   },
   "permissions": [
     "activeTab",
+    "tabs",
     "https://slack.com/"
   ],
+  "page_action": {
+    "default_icon": {
+      "48": "img/icon48.png"
+    },
+    "default_title": "slack-chikury",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": ["js/background.js"]
+  },
   "content_scripts": [
     {
       "matches": [ "https://twitter.com/*" ],
