@@ -14,8 +14,10 @@ const postProfile = profile => {
   });
 };
 
-chrome.tabs.onCreated.addListener(() => {
-  postProfile({ status_text: 'aaa', status_emoji: ':herb:' });
+chrome.tabs.onUpdated.addListener(tab => {
+  if (/^https:\/\/twitter\.com/.test(tab.url)) {
+    postProfile({ status_text: 'aaa', status_emoji: ':herb:' });
+  }
 });
 
 chrome.tabs.onRemoved.addListener(() => {
