@@ -4,7 +4,14 @@
     <link rel="stylesheet" type="text/css" href="./css/style.css">
   </head>
   <body>
-    <input type="text" id="input-token">
-    <button id="save-button">Save</button>
+    <form class="token-form">
+      <div class="field">
+        <input type="text" id="input-token" required>
+        <span class="floating-label">OAuth Access Token</span>
+      </div>
+      <div class="form-button">
+        <button id="save-button">Save</button>
+      </div>
+    </form>
   </body>
 </html>

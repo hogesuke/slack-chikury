@@ -1,0 +1,45 @@
+.token-form {
+  padding: 15px 10px 0;
+}
+
+.field {
+  position: relative;
+}
+
+#input-token {
+  width: 300px;
+  font-size: 12px;
+  padding: 5px;
+}
+
+.form-button {
+  margin-top: 10px;
+  text-align: right;
+}
+
+#save-button {
+  padding: 6px 8px;
+  background: #3379d6;
+  border: none;
+  font-size: 12px;
+  color: #fff;
+}
+
+.floating-label {
+  position: absolute;
+  left: 10px;
+  top: 6px;
+  pointer-events: none;
+  font-size: 13px;
+  opacity: 0.8;
+  transition: 0.2s ease all;
+}
+
+#input-token:focus ~ .floating-label,
+#input-token:not(:focus):valid ~ .floating-label{
+  top: -20px;
+  left: 5px;
+  font-size: 11px;
+  color: #3165e0;
+  opacity: 1;
+}
