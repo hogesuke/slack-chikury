@@ -1,8 +1,8 @@
 import '../css/style.scss';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const tokenInput = document.querySelector('#input-token');
-  const saveButton = document.querySelector('#save-button');
+  const tokenInput = document.querySelector('.input-token');
+  const saveButton = document.querySelector('.save-button');
   const token = localStorage.getItem('token') || '';
 
   tokenInput.value = token;
