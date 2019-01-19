@@ -4,7 +4,9 @@ export default class Chikury {
     this.isChikurying = false;
     // todo tokenが取得できなかった場合の処理
     this.token = localStorage.getItem('token');
+  }
 
+  init() {
     chrome.tabs.onUpdated.addListener(this.onTabUpdated.bind(this));
     chrome.tabs.onRemoved.addListener(this.onTabRemoved.bind(this));
   }
