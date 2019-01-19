@@ -4,6 +4,7 @@ export default class Chikury {
     this.isChikurying = false;
     // todo tokenが取得できなかった場合の処理
     this.token = localStorage.getItem('token');
+    this.startDate = null;
   }
 
   init() {
@@ -18,16 +19,50 @@ export default class Chikury {
 
     // Twitterが開かれたら
     if (/^https:\/\/twitter\.com/.test(changeInfo.url)) {
-      !this.isChikurying && this.chikuru();
+      !this.isChikurying && this.startSabori();
     } else {
-      this.isChikurying &&
-        this.validateTwitterTabExistence().then(exists => !exists && this.clear());
+      this.isChikurying && this.exitSabori();
     }
   }
 
   onTabRemoved() {
-    this.isChikurying &&
-      this.validateTwitterTabExistence().then(exists => !exists && this.clear());
+    this.isChikurying && this.exitSabori();
+  }
+
+  startSabori() {
+    this.startDate = this.startDate ? this.startDate : new Date();
+
+    const minutes = this.calcTotalSaboriMinutes();
+
+    this.timeUpdateInterval = setInterval(() => {
+      const updatedMinutes = this.calcTotalSaboriMinutes();
+
+      if (minutes !== updatedMinutes) {
+        this.chikuru(updatedMinutes);
+      }
+    }, 10000);
+
+    this.chikuru(minutes);
+  }
+
+  exitSabori() {
+    this.validateTwitterTabExistence().then(exists => {
+      if (!exists) {
+        clearInterval(this.timeUpdateInterval)
+        localStorage.setItem('seconds', this.calcTotalSaboriSeconds());
+        this.startDate = null;
+        this.clearChikuri()
+      }
+    });
+  }
+
+  calcTotalSaboriSeconds() {
+    const savedSeconds = parseInt(localStorage.getItem('seconds')) || 0;
+    return ((new Date() - this.startDate) / 1000) + savedSeconds;
+  }
+
+  calcTotalSaboriMinutes() {
+      return Math.ceil(this.calcTotalSaboriSeconds() / 60);
   }
 
   async validateTwitterTabExistence() {
@@ -53,18 +88,18 @@ export default class Chikury {
     });
   }
 
-  chikuru() {
+  chikuru(minutes) {
     this.postProfile({
-      status_text: 'aaa',
+      status_text: `${minutes}分`,
       status_emoji: ':herb:'
     }).then(
       () => (this.isChikurying = true)
     );
   }
 
-  clear() {
+  clearChikuri() {
     this.postProfile({
-      status_text: 'bbb',
+      status_text: '',
       status_emoji: ':palm_tree:'
     }).then(
       () => (this.isChikurying = false)

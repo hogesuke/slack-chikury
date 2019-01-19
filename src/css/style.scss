@@ -13,12 +13,11 @@
   font-size: 13px;
   color: rgba(0, 0, 0, 0.5);
   pointer-events: none;
-  transition: 0.2s ease all;
 }
 
 .input-token {
   width: 300px;
-  padding: 5px;
+  padding: 5px 0;
   font-size: 12px;
   border: none;
   border-bottom: solid 2px rgba(0, 0, 0, 0.3);
@@ -28,11 +27,14 @@
     outline: 0;
   }
 
+  &:focus ~ .floating-label {
+    color: #3165e0;
+  }
+
   &:focus ~ .floating-label,
   &:not(:focus):valid ~ .floating-label {
     top: -20px;
     font-size: 11px;
-    color: #3165e0;
   }
 }
 
