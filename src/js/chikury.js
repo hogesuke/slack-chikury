@@ -1,9 +1,9 @@
 export default class Chikury {
 
   constructor() {
-    this.isChikurying = false;
     // todo tokenが取得できなかった場合の処理
     this.token = localStorage.getItem('token');
+    this.isChikurying = false;
     this.startDate = null;
   }
 
@@ -31,6 +31,10 @@ export default class Chikury {
 
   startSabori() {
     this.startDate = this.startDate ? this.startDate : new Date();
+
+    if (this.timeUpdateInterval) {
+      clearInterval(this.timeUpdateInterval);
+    }
 
     const minutes = this.calcTotalSaboriMinutes();
 
