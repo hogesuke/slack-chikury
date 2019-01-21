@@ -61,8 +61,19 @@ export default class Chikury {
   }
 
   calcTotalSaboriSeconds() {
+    const lastUpdateString = localStorage.getItem('last-update')
+    const last = lastUpdateString ? new Date(lastUpdateString) : null;
+    const lastYYYYMMDD = last ? last.getYear() + last.getMonth() + last.getDate() : null;
+    const current = new Date();
+    const currentYYYYMMDD = current.getYear() + current.getMonth() + current.getDate();
+
+    if (lastYYYYMMDD !== currentYYYYMMDD) {
+      localStorage.setItem('seconds', 0);
+      return 0;
+    }
+
     const savedSeconds = parseInt(localStorage.getItem('seconds')) || 0;
-    return ((new Date() - this.startDate) / 1000) + savedSeconds;
+    return ((current - this.startDate) / 1000) + savedSeconds;
   }
 
   calcTotalSaboriMinutes() {
@@ -96,9 +107,10 @@ export default class Chikury {
     this.postProfile({
       status_text: `${minutes}分`,
       status_emoji: ':herb:'
-    }).then(
-      () => (this.isChikurying = true)
-    );
+    }).then(() => {
+      this.isChikurying = true;
+      localStorage.setItem('last-update', new Date().toISOString());
+    });
   }
 
   clearChikuri() {
