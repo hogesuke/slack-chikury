@@ -1,5 +1,7 @@
+<!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8"/>
     <script src="./js/popup.js"></script>
     <link rel="stylesheet" type="text/css" href="./css/style.css">
   </head>
@@ -8,6 +10,17 @@
       <div class="form-field">
         <input type="text" class="input-token" novalidate>
         <span class="floating-label">OAuth Access Token</span>
+      </div>
+      <div class="form-button">
+        <button class="save-button">Save</button>
+      </div>
+    </form>
+    <form class="range-form">
+      <div class="form-field">
+        <p>Time Range</p>
+        <input type="time" class="input-time" novalidate>
+        <span>〜</span>
+        <input type="time" class="input-time" novalidate>
       </div>
       <div class="form-button">
         <button class="save-button">Save</button>
