@@ -7,6 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   tokenInput.value = token;
 
+  const startTimeInput = document.querySelector('.input-starttime');
+  const endTimeInput = document.querySelector('.input-endtime');
+  const startTime = localStorage.getItem('start-time') || '';
+  const endTime = localStorage.getItem('end-time') || '';
+
+  startTimeInput.value = startTime;
+  endTimeInput.value = endTime;
+
   if (!tokenInput.value) {
     saveButton.disabled = true;
   }
@@ -19,5 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tokenInput.value) {
       localStorage.setItem('token', tokenInput.value);
     }
+  });
+
+  startTimeInput.addEventListener('change', () => {
+    alert(startTimeInput.value);
   });
 });
