@@ -29,7 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  startTimeInput.addEventListener('change', () => {
-    alert(startTimeInput.value);
+  startTimeInput.addEventListener('input', () => {
+    localStorage.setItem(startTimeInput.value);
+  });
+
+  endTimeInput.addEventListener('input', () => {
+    localStorage.setItem(endTimeInput.value);
   });
 });
