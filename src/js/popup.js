@@ -30,10 +30,20 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   startTimeInput.addEventListener('input', () => {
-    localStorage.setItem(startTimeInput.value);
+    let time = startTimeInput.value;
+    if (!time) {
+      time = '09:00';
+      startTimeInput.value = time;
+    }
+    localStorage.setItem('start-time', time);
   });
 
   endTimeInput.addEventListener('input', () => {
-    localStorage.setItem(endTimeInput.value);
+    let time = endTimeInput.value;
+    if (!time) {
+      time = '18:00';
+      endTimeInput.value = time;
+    }
+    localStorage.setItem('end-time', time);
   });
 });
