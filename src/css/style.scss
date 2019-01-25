@@ -29,6 +29,7 @@
 
   &:focus ~ .floating-label {
     color: #3165e0;
+    transition: all 0.2s;
   }
 
   &:focus ~ .floating-label,
