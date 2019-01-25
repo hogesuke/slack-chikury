@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8"/>
-    <script src="./js/popup.js"></script>
-    <link rel="stylesheet" type="text/css" href="./css/style.css">
-  </head>
-  <body>
+
+<head>
+  <meta charset="utf-8" />
+  <script src="./js/popup.js"></script>
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+</head>
+
+<body>
+  <div class="form-container">
     <form class="token-form">
       <div class="form-field">
+        <label class="form-label">OAuth Access Token</label>
         <input type="text" class="input-token" required>
-        <span class="floating-label">OAuth Access Token</span>
       </div>
     </form>
     <form class="range-form">
       <div class="form-field">
-        <p>Time Range</p>
+        <label class="form-label">Time Range</label>
         <input type="time" class="input-starttime" novalidate>
         <span>〜</span>
         <input type="time" class="input-endtime" novalidate>
       </div>
     </form>
-  </body>
+  </div>
+</body>
+
 </html>
