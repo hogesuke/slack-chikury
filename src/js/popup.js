@@ -5,33 +5,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   tokenInput.value = localStorage.getItem('token') || '';
 
-  const startTimeInput = document.querySelector('.input-starttime');
-  const endTimeInput = document.querySelector('.input-endtime');
-  const startTime = localStorage.getItem('start-time') || '';
-  const endTime = localStorage.getItem('end-time') || '';
+  const openTimeInput = document.querySelector('.input-opentime');
+  const closedTimeInput = document.querySelector('.input-closedtime');
+  const openTime = localStorage.getItem('open-time') || '';
+  const closedTime = localStorage.getItem('closed-time') || '';
 
-  startTimeInput.value = startTime;
-  endTimeInput.value = endTime;
+  openTimeInput.value = openTime;
+  closedTimeInput.value = closedTime;
 
   tokenInput.addEventListener('input', () => {
     localStorage.setItem('token', tokenInput.value);
   });
 
-  startTimeInput.addEventListener('input', () => {
-    let time = startTimeInput.value;
+  openTimeInput.addEventListener('input', () => {
+    let time = openTimeInput.value;
     if (!time) {
       time = '09:00';
-      startTimeInput.value = time;
+      openTimeInput.value = time;
     }
-    localStorage.setItem('start-time', time);
+    localStorage.setItem('open-time', time);
   });
 
-  endTimeInput.addEventListener('input', () => {
-    let time = endTimeInput.value;
+  closedTimeInput.addEventListener('input', () => {
+    let time = closedTimeInput.value;
     if (!time) {
       time = '18:00';
-      endTimeInput.value = time;
+      closedTimeInput.value = time;
     }
-    localStorage.setItem('end-time', time);
+    localStorage.setItem('closed-time', time);
   });
 });
