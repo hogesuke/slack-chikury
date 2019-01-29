@@ -1,9 +1,10 @@
 export default class Chikury {
 
   constructor() {
-    // todo tokenが取得できなかった場合の処理
+    // todo localStorageから取得できなかった場合の処理
     this.token = localStorage.getItem('token');
-    this.isChikurying = false;
+    this.openTime = localStorage.getItem('open-time');
+    this.closedTime = localStorage.getItem('closed-time');
     this.startDate = null;
   }
 
@@ -19,14 +20,14 @@ export default class Chikury {
 
     // Twitterが開かれたら
     if (/^https:\/\/twitter\.com/.test(changeInfo.url)) {
-      !this.isChikurying && this.startSabori();
+      this.isWithinTimeRange() && this.startSabori();
     } else {
-      this.isChikurying && this.exitSabori();
+      this.exitSabori();
     }
   }
 
   onTabRemoved() {
-    this.isChikurying && this.exitSabori();
+    this.exitSabori();
   }
 
   startSabori() {
@@ -39,6 +40,11 @@ export default class Chikury {
     const minutes = this.calcTotalSaboriMinutes();
 
     this.timeUpdateInterval = setInterval(() => {
+      if (!this.isWithinTimeRange()) {
+        this.exitSabori();
+        return;
+      }
+
       const updatedMinutes = this.calcTotalSaboriMinutes();
 
       if (minutes !== updatedMinutes) {
@@ -58,6 +64,46 @@ export default class Chikury {
         this.clearChikuri()
       }
     });
+  }
+
+  isWithinTimeRange () {
+    const current = (() => {
+      const date = new Date();
+      return {
+        hours: date.getHours(),
+        minutes: date.getMinutes()
+      };
+    })();
+    const open = (() => {
+      const time = this.openTime.split(':');
+      return {
+        hours: parseInt(time[0]),
+        minutes: parseInt(time[1])
+      };
+    })();
+    const closed = (() => {
+      const time = this.closedTime.split(':');
+      return {
+        hours: parseInt(time[0]),
+        minutes: parseInt(time[1])
+      };
+    })();
+
+    if (current.hours < open.hours || closed.hours < current.hours) {
+      console.log('coco1')
+      return false;
+    }
+    if (current.hours === open.hours && current.minutes < open.minutes) {
+      console.log('coco2')
+      return false;
+    }
+    if (current.hours === closed.hours && closed.minutes < current.minutes) {
+      console.log('coco3')
+      return false;
+    }
+
+    console.log('coco4')
+    return true;
   }
 
   calcTotalSaboriSeconds() {
@@ -108,7 +154,6 @@ export default class Chikury {
       status_text: `${minutes}分`,
       status_emoji: ':herb:'
     }).then(() => {
-      this.isChikurying = true;
       localStorage.setItem('last-update', new Date().toISOString());
     });
   }
@@ -117,8 +162,6 @@ export default class Chikury {
     this.postProfile({
       status_text: '',
       status_emoji: ':palm_tree:'
-    }).then(
-      () => (this.isChikurying = false)
-    );
+    });
   }
 }
