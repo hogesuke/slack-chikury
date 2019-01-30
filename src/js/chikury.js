@@ -8,27 +8,38 @@ export default class Chikury {
     this.startDate = null;
   }
 
-  init() {
+  async init() {
     chrome.tabs.onUpdated.addListener(this.onTabUpdated.bind(this));
     chrome.tabs.onRemoved.addListener(this.onTabRemoved.bind(this));
-  }
 
-  onTabUpdated(tabId, changeInfo) {
-    if (!changeInfo.url) {
-      return;
-    }
+    const exists = await this.validateTwitterTabExistence();
+    const isWithinTimeRange = this.isWithinTimeRange();
 
-    // Twitterが開かれたら
-    if (/^https:\/\/twitter\.com/.test(changeInfo.url)) {
-      console.log('this.isWithinTimeRange()', this.isWithinTimeRange());
-      this.isWithinTimeRange() && this.startSabori();
+    if (exists && isWithinTimeRange) {
+      this.startSabori();
     } else {
       this.exitSabori();
     }
   }
 
-  onTabRemoved() {
-    this.exitSabori();
+  async onTabUpdated(tabId, changeInfo) {
+    if (!changeInfo.url) return;
+
+    const exists = await this.validateTwitterTabExistence();
+    const isWithinTimeRange = this.isWithinTimeRange();
+
+    if (exists && isWithinTimeRange) {
+      this.startSabori();
+    } else {
+      this.exitSabori();
+    }
+  }
+
+  async onTabRemoved() {
+    const exists = await this.validateTwitterTabExistence();
+    if (!exists) {
+      this.exitSabori();
+    }
   }
 
   startSabori() {
@@ -40,14 +51,18 @@ export default class Chikury {
 
     const minutes = this.calcTotalSaboriMinutes();
 
-    this.timeUpdateInterval = setInterval(() => {
-      if (!this.isWithinTimeRange()) {
+    this.timeUpdateInterval = setInterval(async () => {
+      const exists = await this.validateTwitterTabExistence();
+      const isWithinTimeRange = this.isWithinTimeRange();
+
+      if (!exists || !isWithinTimeRange) {
         this.exitSabori();
         return;
       }
 
       const updatedMinutes = this.calcTotalSaboriMinutes();
 
+      // 経過分が変わったときだけ更新
       if (minutes !== updatedMinutes) {
         this.chikuru(updatedMinutes);
       }
@@ -57,14 +72,10 @@ export default class Chikury {
   }
 
   exitSabori() {
-    this.validateTwitterTabExistence().then(exists => {
-      if (!exists) {
-        clearInterval(this.timeUpdateInterval)
-        localStorage.setItem('seconds', this.calcTotalSaboriSeconds());
-        this.startDate = null;
-        this.clearChikuri()
-      }
-    });
+    clearInterval(this.timeUpdateInterval)
+    localStorage.setItem('seconds', this.calcTotalSaboriSeconds());
+    this.startDate = null;
+    this.clearChikuri()
   }
 
   isWithinTimeRange () {
