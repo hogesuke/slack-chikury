@@ -20,6 +20,7 @@ export default class Chikury {
 
     // Twitterが開かれたら
     if (/^https:\/\/twitter\.com/.test(changeInfo.url)) {
+      console.log('this.isWithinTimeRange()', this.isWithinTimeRange());
       this.isWithinTimeRange() && this.startSabori();
     } else {
       this.exitSabori();
@@ -90,19 +91,15 @@ export default class Chikury {
     })();
 
     if (current.hours < open.hours || closed.hours < current.hours) {
-      console.log('coco1')
       return false;
     }
     if (current.hours === open.hours && current.minutes < open.minutes) {
-      console.log('coco2')
       return false;
     }
     if (current.hours === closed.hours && closed.minutes < current.minutes) {
-      console.log('coco3')
       return false;
     }
 
-    console.log('coco4')
     return true;
   }
 
