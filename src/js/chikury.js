@@ -10,9 +10,7 @@ export default class Chikury {
     this.timeKeeper = new TimeKeeper();
     // todo localStorageから取得できなかった場合の処理
     this.token = localStorage.getItem('token');
-    this.openTime = localStorage.getItem('open-time');
-    this.closedTime = localStorage.getItem('closed-time');
-    
+
     this.isChikurying = false;
   }
 
@@ -32,7 +30,7 @@ export default class Chikury {
 
   async onTabUpdated(tabId, changeInfo) {
     if (!changeInfo.url) return;
-    
+
     console.log('changeInfo', changeInfo);
 
     const exists = await this.detector.existsSaboriTab();
