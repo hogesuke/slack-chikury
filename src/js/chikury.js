@@ -60,7 +60,7 @@ export default class Chikury {
     console.log('startSabori');
 
     const startDate = localStorage.getItem('sabori-start-date');
-    
+
     console.log('startDate', startDate, !!startDate);
 
     if (!startDate) {
@@ -71,7 +71,9 @@ export default class Chikury {
       clearInterval(this.timeUpdateInterval);
     }
 
-    const minutes = this.timeKeeper.calcTotalSaboriMinutes();
+    let minutes = this.timeKeeper.calcTotalSaboriMinutes();
+
+    this.chikuru(minutes);
 
     this.timeUpdateInterval = setInterval(async () => {
       console.log('timeUpdateInterval');
@@ -87,11 +89,10 @@ export default class Chikury {
 
       // 経過分が変わったときだけ更新
       if (minutes !== updatedMinutes) {
+        minutes = updatedMinutes;
         this.chikuru(updatedMinutes);
       }
     }, 10000);
-
-    this.chikuru(minutes);
   }
 
   exitSabori() {
