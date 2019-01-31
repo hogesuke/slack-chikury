@@ -10,6 +10,8 @@ export default class Chikury {
     this.token = localStorage.getItem('token');
     this.openTime = localStorage.getItem('open-time');
     this.closedTime = localStorage.getItem('closed-time');
+    
+    this.isChikurying = false;
   }
 
   async init() {
@@ -49,7 +51,14 @@ export default class Chikury {
   }
 
   startSabori() {
+    // すでにチクり中であれば何もしない
+    if (this.isChikurying) {
+      console.log('startSabori 何もしない')
+      return;
+    }
+
     console.log('startSabori');
+
     const startDate = localStorage.getItem('sabori-start-date');
     
     console.log('startDate', startDate, !!startDate);
@@ -86,7 +95,13 @@ export default class Chikury {
   }
 
   exitSabori() {
-    console.log('exitSabori');
+    if (!this.isChikurying) {
+      console.log('exitSabori 何もしない')
+      return;
+    }
+
+    console.log('exitSabori')
+
     clearInterval(this.timeUpdateInterval)
     localStorage.setItem('seconds', this.timeKeeper.calcTotalSaboriSeconds());
     localStorage.setItem('sabori-start-date', '');
@@ -113,6 +128,7 @@ export default class Chikury {
       status_emoji: ':herb:'
     }).then(() => {
       localStorage.setItem('last-update-date', new Date().toISOString());
+      this.isChikurying = true;
     });
   }
 
@@ -120,6 +136,8 @@ export default class Chikury {
     this.postProfile({
       status_text: '',
       status_emoji: ':palm_tree:'
+    }).then(() => {
+      this.isChikurying = false;
     });
   }
 }
