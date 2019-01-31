@@ -1,9 +1,11 @@
+import ChikuryClient from './chikury-client';
 import SaboriDetector from './sabori-detector';
 import TimeKeeper from './time-keeper';
 
 export default class Chikury {
 
   constructor() {
+    this.client = new ChikuryClient();
     this.detector = new SaboriDetector(['https://twitter.com/*']);
     this.timeKeeper = new TimeKeeper();
     // todo localStorageから取得できなかった場合の処理
@@ -73,7 +75,7 @@ export default class Chikury {
 
     let minutes = this.timeKeeper.calcTotalSaboriMinutes();
 
-    this.chikuru(minutes);
+    this.postChikury(minutes);
 
     this.timeUpdateInterval = setInterval(async () => {
       console.log('timeUpdateInterval');
@@ -90,9 +92,9 @@ export default class Chikury {
       // 経過分が変わったときだけ更新
       if (minutes !== updatedMinutes) {
         minutes = updatedMinutes;
-        this.chikuru(updatedMinutes);
+        this.postChikury(updatedMinutes);
       }
-    }, 10000);
+    }, 10000); // todo intervalの間隔を広くするように要修正（30000ぐらい)
   }
 
   exitSabori() {
@@ -106,39 +108,23 @@ export default class Chikury {
     clearInterval(this.timeUpdateInterval)
     localStorage.setItem('seconds', this.timeKeeper.calcTotalSaboriSeconds());
     localStorage.setItem('sabori-start-date', '');
-    this.clearChikuri()
+    this.clearChikury()
   }
 
-
-  postProfile(profile) {
-    return fetch('https://slack.com/api/users.profile.set', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        profile
-      })
-    });
+  postChikury(minutes) {
+    this.client
+      .post(minutes)
+      .then(() => {
+        localStorage.setItem('last-update-date', new Date().toISOString());
+        this.isChikurying = true;
+      });
   }
 
-  chikuru(minutes) {
-    this.postProfile({
-      status_text: `${minutes}分`,
-      status_emoji: ':herb:'
-    }).then(() => {
-      localStorage.setItem('last-update-date', new Date().toISOString());
-      this.isChikurying = true;
-    });
-  }
-
-  clearChikuri() {
-    this.postProfile({
-      status_text: '',
-      status_emoji: ':palm_tree:'
-    }).then(() => {
-      this.isChikurying = false;
-    });
+  clearChikury() {
+    this.client
+      .clear()
+      .then(() => {
+        this.isChikurying = false;
+      });
   }
 }
