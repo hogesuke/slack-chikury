@@ -5,11 +5,12 @@ import TimeKeeper from './time-keeper';
 export default class Chikury {
 
   constructor() {
-    this.client = new ChikuryClient();
+    // todo localStorageから取得できなかった場合の処理
+    const token = localStorage.getItem('token');
+
+    this.client = new ChikuryClient(token);
     this.detector = new SaboriDetector(['https://twitter.com/*']);
     this.timeKeeper = new TimeKeeper();
-    // todo localStorageから取得できなかった場合の処理
-    this.token = localStorage.getItem('token');
 
     this.isChikurying = false;
   }

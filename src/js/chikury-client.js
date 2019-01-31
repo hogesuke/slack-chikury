@@ -1,5 +1,9 @@
 export default class ChikuryClient {
 
+  constructor (token) {
+    this.token = token;
+  }
+
   post (minutes) {
     return this._postProfile({
       status_text: `${minutes}分`,
