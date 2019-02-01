@@ -1,17 +1,18 @@
+import StorageAccessor from './storage-accessor';
+
 export default class TimeKeeper {
 
-  constructor() {
-  }
+  constructor() {}
 
-  isWithinTimeRange () {
+  isWithinTimeRange() {
     // todo localStorageから取得できなかった場合の処理
-    this.openTime = localStorage.getItem('open-time');
-    this.closedTime = localStorage.getItem('closed-time');
+    this.openTime = StorageAccessor.getOpenTime();
+    this.closedTime = StorageAccessor.getClosedTime();
 
     const date = new Date();
-    const current = this.getParsedTime(`${date.getHours()}:${date.getMinutes()}`);
-    const open = this.getParsedTime(this.openTime);
-    const closed = this.getParsedTime(this.closedTime);
+    const current = this._getParsedTime(`${date.getHours()}:${date.getMinutes()}`);
+    const open = this._getParsedTime(this.openTime);
+    const closed = this._getParsedTime(this.closedTime);
 
     if (current.hours < open.hours || closed.hours < current.hours) {
       return false;
@@ -26,27 +27,27 @@ export default class TimeKeeper {
     return true;
   }
 
-  getParsedTime (timeString) {
-      const time = timeString.split(':');
-      return {
-        hours: parseInt(time[0]),
-        minutes: parseInt(time[1])
-      };
+  _getParsedTime(timeString) {
+    const time = timeString.split(':');
+    return {
+      hours: parseInt(time[0]),
+      minutes: parseInt(time[1])
+    };
   }
 
   calcTotalSaboriSeconds() {
-    const savedSeconds = parseInt(localStorage.getItem('seconds')) || 0;
-    const startDateString = localStorage.getItem('sabori-start-date');
+    const savedSeconds = parseInt(StorageAccessor.getProgressedSeconds()) || 0;
+    const startDateString = StorageAccessor.getSaboriStartDate();
 
     if (!startDateString) return savedSeconds;
 
-    const lastUpdateString = localStorage.getItem('last-update-date')
+    const lastUpdateString = StorageAccessor.getLastUpdateDate();
     const last = lastUpdateString ? new Date(lastUpdateString) : null;
     const current = new Date();
 
     // 日付をまたいだ場合リセット
-    if (this.getYYYYMD(last) !== this.getYYYYMD(current)) {
-      localStorage.setItem('seconds', 0);
+    if (this._getYYYYMD(last) !== this._getYYYYMD(current)) {
+      StorageAccessor.setProgressedSeconds(0);
       return 0;
     }
 
@@ -54,10 +55,10 @@ export default class TimeKeeper {
   }
 
   calcTotalSaboriMinutes() {
-      return Math.ceil(this.calcTotalSaboriSeconds() / 60);
+    return Math.ceil(this.calcTotalSaboriSeconds() / 60);
   }
 
-  getYYYYMD (date) {
+  _getYYYYMD(date) {
     if (!date) return '';
     return '' + date.getFullYear() + (date.getMonth() + 1) + date.getDate();
   }

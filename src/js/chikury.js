@@ -1,12 +1,13 @@
 import ChikuryClient from './chikury-client';
 import SaboriDetector from './sabori-detector';
 import TimeKeeper from './time-keeper';
+import StorageAccessor from './storage-accessor';
 
 export default class Chikury {
 
   constructor() {
     // todo localStorageから取得できなかった場合の処理
-    const token = localStorage.getItem('token');
+    const token = StorageAccessor.getToken();
 
     this.client = new ChikuryClient(token);
     this.detector = new SaboriDetector(['https://twitter.com/*']);
@@ -60,12 +61,12 @@ export default class Chikury {
 
     console.log('startSabori');
 
-    const startDate = localStorage.getItem('sabori-start-date');
+    const startDate = StorageAccessor.getSaboriStartDate();
 
     console.log('startDate', startDate, !!startDate);
 
     if (!startDate) {
-      localStorage.setItem('sabori-start-date', new Date().toISOString());
+      StorageAccessor.setSaboriStartDate(new Date().toISOString());
     }
 
     if (this.timeUpdateInterval) {
@@ -105,8 +106,8 @@ export default class Chikury {
     console.log('exitSabori')
 
     clearInterval(this.timeUpdateInterval)
-    localStorage.setItem('seconds', this.timeKeeper.calcTotalSaboriSeconds());
-    localStorage.setItem('sabori-start-date', '');
+    StorageAccessor.setProgressedSeconds(this.timeKeeper.calcTotalSaboriSeconds());
+    StorageAccessor.setSaboriStartDate('');
     this.clearChikury()
   }
 
@@ -114,7 +115,7 @@ export default class Chikury {
     this.client
       .post(minutes)
       .then(() => {
-        localStorage.setItem('last-update-date', new Date().toISOString());
+        StorageAccessor.setLastUpdateDate(new Date().toISOString());
         this.isChikurying = true;
       });
   }

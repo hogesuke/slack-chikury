@@ -1,20 +1,21 @@
 import '../css/style.scss';
+import StorageAccessor from './storage-accessor';
 
 document.addEventListener('DOMContentLoaded', () => {
   const tokenInput = document.querySelector('.input-token');
 
-  tokenInput.value = localStorage.getItem('token') || '';
+  tokenInput.value = StorageAccessor.getToken() || '';
 
   const openTimeInput = document.querySelector('.input-opentime');
   const closedTimeInput = document.querySelector('.input-closedtime');
-  const openTime = localStorage.getItem('open-time') || '';
-  const closedTime = localStorage.getItem('closed-time') || '';
+  const openTime = StorageAccessor.getOpenTime() || '';
+  const closedTime = StorageAccessor.getClosedTime() || '';
 
   openTimeInput.value = openTime;
   closedTimeInput.value = closedTime;
 
   tokenInput.addEventListener('input', () => {
-    localStorage.setItem('token', tokenInput.value);
+    StorageAccessor.setToken(tokenInput.value);
   });
 
   openTimeInput.addEventListener('input', () => {
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
       time = '09:00';
       openTimeInput.value = time;
     }
-    localStorage.setItem('open-time', time);
+    StorageAccessor.setOpenTime(time);
   });
 
   closedTimeInput.addEventListener('input', () => {
@@ -32,6 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
       time = '18:00';
       closedTimeInput.value = time;
     }
-    localStorage.setItem('closed-time', time);
+    StorageAccessor.setClosedTime(time);
   });
 });
