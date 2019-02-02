@@ -65,9 +65,9 @@ export default class Chikury {
       clearInterval(this.timeUpdateInterval);
     }
 
-    const time = this.timeKeeper.calcTotalSaboriTime(new Date());
+    const saboriTime = this.timeKeeper.calcTotalSaboriTime(new Date());
 
-    this.postChikury(time);
+    this.postChikury(saboriTime);
 
     this.timeUpdateInterval = setInterval(this.intervalUpdater.bind(this), 10000); // todo intervalの間隔を広くするように要修正（30000ぐらい)
   }
@@ -84,11 +84,11 @@ export default class Chikury {
 
     const lastUpdateMinutes = StorageAccessor.getProgressedMinutes();
     const lastUpdateDate = StorageAccessor.getLastUpdateDate() ? new Date(StorageAccessor.getLastUpdateDate()) : null
-    const time = this.timeKeeper.calcTotalSaboriTime(lastUpdateDate);
+    const saboriTime = this.timeKeeper.calcTotalSaboriTime(lastUpdateDate);
 
     // 経過分が変わったときだけ更新
-    if (lastUpdateMinutes !== time.minutes) {
-      this.postChikury(time);
+    if (lastUpdateMinutes !== saboriTime.minutes) {
+      this.postChikury(saboriTime);
     }
   }
 
@@ -102,21 +102,21 @@ export default class Chikury {
 
     clearInterval(this.timeUpdateInterval)
 
-    const time = this.timeKeeper.calcTotalSaboriTime();
+    const saboriTime = this.timeKeeper.calcTotalSaboriTime();
 
-    StorageAccessor.setProgressedSeconds(time.seconds);
+    StorageAccessor.setProgressedSeconds(saboriTime.seconds);
 
     this.clearChikury()
   }
 
-  postChikury(time) {
+  postChikury(saboriTime) {
 
     this.client
-      .post(time.minutes)
+      .post(saboriTime.minutes)
       .then(() => {
         StorageAccessor.setLastUpdateDate(new Date().toISOString());
-        StorageAccessor.setProgressedMinutes(time.minutes);
-        StorageAccessor.setProgressedSeconds(time.seconds);
+        StorageAccessor.setProgressedMinutes(saboriTime.minutes);
+        StorageAccessor.setProgressedSeconds(saboriTime.seconds);
         this.isChikurying = true;
       });
   }
