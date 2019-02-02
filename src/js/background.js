@@ -1,4 +1,3 @@
-
 import Chikury from './chikury';
 
 chrome.tabs.onUpdated.addListener(tabId => {
@@ -6,4 +5,4 @@ chrome.tabs.onUpdated.addListener(tabId => {
   chrome.pageAction.show(tabId)
 });
 
-new Chikury().init();
+new Chikury().run();

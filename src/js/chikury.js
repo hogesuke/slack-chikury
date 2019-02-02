@@ -16,7 +16,7 @@ export default class Chikury {
     this.isChikurying = false;
   }
 
-  async init() {
+  async run() {
     chrome.tabs.onUpdated.addListener(this.onTabUpdated.bind(this));
     chrome.tabs.onRemoved.addListener(this.onTabRemoved.bind(this));
 
