@@ -82,7 +82,7 @@ export default class Chikury {
       return;
     }
 
-    const lastUpdateMinutes = StorageAccessor.getLastUpdateMinutes();
+    const lastUpdateMinutes = StorageAccessor.getProgressedMinutes();
     const lastUpdateDate = StorageAccessor.getLastUpdateDate() ? new Date(StorageAccessor.getLastUpdateDate()) : null
     const time = this.timeKeeper.calcTotalSaboriTime(lastUpdateDate);
 
@@ -115,7 +115,7 @@ export default class Chikury {
       .post(time.minutes)
       .then(() => {
         StorageAccessor.setLastUpdateDate(new Date().toISOString());
-        StorageAccessor.setLastUpdateMinutes(time.minutes);
+        StorageAccessor.setProgressedMinutes(time.minutes);
         StorageAccessor.setProgressedSeconds(time.seconds);
         this.isChikurying = true;
       });

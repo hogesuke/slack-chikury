@@ -25,19 +25,19 @@ export default class StorageAccessor {
   }
 
   static getProgressedSeconds() {
-    return this._getItem('seconds');
+    return this._getItem('progressed-seconds');
   }
 
   static setProgressedSeconds(seconds) {
-    return this._setItem('seconds', seconds);
+    return this._setItem('progressed-seconds', seconds);
   }
 
-  static getLastUpdateMinutes() {
-    return this._getItem('last-update-minutes');
+  static getProgressedMinutes() {
+    return this._getItem('progressed-minutes');
   }
 
-  static setLastUpdateMinutes(minutes) {
-    return this._setItem('last-update-minutes', minutes);
+  static setProgressedMinutes(minutes) {
+    return this._setItem('progressed-minutes', minutes);
   }
 
   static getLastUpdateDate() {

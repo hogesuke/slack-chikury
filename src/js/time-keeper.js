@@ -36,7 +36,7 @@ export default class TimeKeeper {
   }
 
   calcTotalSaboriTime(fromDate) {
-    const lastUpdateMinutes = parseInt(StorageAccessor.getLastUpdateMinutes()) || 0;
+    const lastUpdateMinutes = parseInt(StorageAccessor.getProgressedMinutes()) || 0;
     const savedSeconds = parseInt(StorageAccessor.getProgressedSeconds()) || 0;
 
     if (!fromDate) {
