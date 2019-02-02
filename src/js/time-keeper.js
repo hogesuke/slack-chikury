@@ -32,30 +32,36 @@ export default class TimeKeeper {
     return {
       hours: parseInt(time[0]),
       minutes: parseInt(time[1])
-    };
+    }
   }
 
-  calcTotalSaboriSeconds() {
+  calcTotalSaboriTime(fromDate) {
+    const lastUpdateMinutes = parseInt(StorageAccessor.getLastUpdateMinutes()) || 0;
     const savedSeconds = parseInt(StorageAccessor.getProgressedSeconds()) || 0;
-    const startDateString = StorageAccessor.getSaboriStartDate();
 
-    if (!startDateString) return savedSeconds;
+    if (!fromDate) {
+      return {
+        seconds: savedSeconds,
+        minutes: lastUpdateMinutes
+      }
+    }
 
-    const lastUpdateString = StorageAccessor.getLastUpdateDate();
-    const last = lastUpdateString ? new Date(lastUpdateString) : null;
-    const current = new Date();
+    const lastUpdateDateString = StorageAccessor.getLastUpdateDate();
+    const lastDate = lastUpdateDateString ? new Date(lastUpdateDateString) : null;
+    const currentDate = new Date();
 
     // 日付をまたいだ場合リセット
-    if (this._getYYYYMD(last) !== this._getYYYYMD(current)) {
-      StorageAccessor.setProgressedSeconds(0);
+    if (this._getYYYYMD(lastDate) !== this._getYYYYMD(currentDate)) {
       return 0;
     }
 
-    return ((current - new Date(startDateString)) / 1000) + savedSeconds;
-  }
+    const seconds = ((currentDate - fromDate) / 1000) + savedSeconds
+    const minutes = Math.ceil(seconds / 60);
 
-  calcTotalSaboriMinutes() {
-    return Math.ceil(this.calcTotalSaboriSeconds() / 60);
+    return {
+      seconds,
+      minutes
+    };
   }
 
   _getYYYYMD(date) {

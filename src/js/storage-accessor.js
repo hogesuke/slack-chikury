@@ -32,20 +32,20 @@ export default class StorageAccessor {
     return this._setItem('seconds', seconds);
   }
 
+  static getLastUpdateMinutes() {
+    return this._getItem('last-update-minutes');
+  }
+
+  static setLastUpdateMinutes(minutes) {
+    return this._setItem('last-update-minutes', minutes);
+  }
+
   static getLastUpdateDate() {
     return this._getItem('last-update-date');
   }
 
   static setLastUpdateDate(lastUpdateDate) {
     return this._setItem('last-update-date', lastUpdateDate);
-  }
-
-  static getSaboriStartDate() {
-    return this._getItem('sabori-start-date');
-  }
-
-  static setSaboriStartDate(saboriStartDate) {
-    return this._setItem('sabori-start-date', saboriStartDate);
   }
 
   static _getItem(key) {

@@ -61,40 +61,35 @@ export default class Chikury {
 
     console.log('startSabori');
 
-    const startDate = StorageAccessor.getSaboriStartDate();
-
-    console.log('startDate', startDate, !!startDate);
-
-    if (!startDate) {
-      StorageAccessor.setSaboriStartDate(new Date().toISOString());
-    }
-
     if (this.timeUpdateInterval) {
       clearInterval(this.timeUpdateInterval);
     }
 
-    let minutes = this.timeKeeper.calcTotalSaboriMinutes();
+    const time = this.timeKeeper.calcTotalSaboriTime(new Date());
 
-    this.postChikury(minutes);
+    this.postChikury(time);
 
-    this.timeUpdateInterval = setInterval(async () => {
-      console.log('timeUpdateInterval');
-      const exists = await this.detector.existsSaboriTab();
-      const isWithinTimeRange = this.timeKeeper.isWithinTimeRange();
+    this.timeUpdateInterval = setInterval(this.intervalUpdater.bind(this), 10000); // todo intervalの間隔を広くするように要修正（30000ぐらい)
+  }
 
-      if (!exists || !isWithinTimeRange) {
-        this.exitSabori();
-        return;
-      }
+  async intervalUpdater() {
+    console.log('timeUpdateInterval');
+    const exists = await this.detector.existsSaboriTab();
+    const isWithinTimeRange = this.timeKeeper.isWithinTimeRange();
 
-      const updatedMinutes = this.timeKeeper.calcTotalSaboriMinutes();
+    if (!exists || !isWithinTimeRange) {
+      this.exitSabori();
+      return;
+    }
 
-      // 経過分が変わったときだけ更新
-      if (minutes !== updatedMinutes) {
-        minutes = updatedMinutes;
-        this.postChikury(updatedMinutes);
-      }
-    }, 10000); // todo intervalの間隔を広くするように要修正（30000ぐらい)
+    const lastUpdateMinutes = StorageAccessor.getLastUpdateMinutes();
+    const lastUpdateDate = StorageAccessor.getLastUpdateDate() ? new Date(StorageAccessor.getLastUpdateDate()) : null
+    const time = this.timeKeeper.calcTotalSaboriTime(lastUpdateDate);
+
+    // 経過分が変わったときだけ更新
+    if (lastUpdateMinutes !== time.minutes) {
+      this.postChikury(time);
+    }
   }
 
   exitSabori() {
@@ -106,16 +101,22 @@ export default class Chikury {
     console.log('exitSabori')
 
     clearInterval(this.timeUpdateInterval)
-    StorageAccessor.setProgressedSeconds(this.timeKeeper.calcTotalSaboriSeconds());
-    StorageAccessor.setSaboriStartDate('');
+
+    const time = this.timeKeeper.calcTotalSaboriTime();
+
+    StorageAccessor.setProgressedSeconds(time.seconds);
+
     this.clearChikury()
   }
 
-  postChikury(minutes) {
+  postChikury(time) {
+
     this.client
-      .post(minutes)
+      .post(time.minutes)
       .then(() => {
         StorageAccessor.setLastUpdateDate(new Date().toISOString());
+        StorageAccessor.setLastUpdateMinutes(time.minutes);
+        StorageAccessor.setProgressedSeconds(time.seconds);
         this.isChikurying = true;
       });
   }
