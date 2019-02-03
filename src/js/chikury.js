@@ -1,4 +1,4 @@
-import ChikuryClient from './chikury-client';
+import APIClient from './api-client';
 import SaboriDetector from './sabori-detector';
 import TimeKeeper from './time-keeper';
 import StorageAccessor from './storage-accessor';
@@ -9,7 +9,7 @@ export default class Chikury {
     // todo localStorageから取得できなかった場合の処理
     const token = StorageAccessor.getToken();
 
-    this.client = new ChikuryClient(token);
+    this.client = new APIClient(token);
     this.detector = new SaboriDetector(['https://twitter.com/*']);
     this.timeKeeper = new TimeKeeper();
 

@@ -1,4 +1,4 @@
-export default class ChikuryClient {
+export default class APIClient {
 
   constructor (token) {
     this.token = token;
