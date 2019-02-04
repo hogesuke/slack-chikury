@@ -25,7 +25,7 @@ export default class StorageAccessor {
   }
 
   static getProgressedSeconds() {
-    return this._getItem('progressed-seconds');
+    return this._getItem('progressed-seconds', { isNumber: true });
   }
 
   static setProgressedSeconds(seconds) {
@@ -33,7 +33,7 @@ export default class StorageAccessor {
   }
 
   static getProgressedMinutes() {
-    return this._getItem('progressed-minutes');
+    return this._getItem('progressed-minutes', { isNumber: true });
   }
 
   static setProgressedMinutes(minutes) {
@@ -48,8 +48,20 @@ export default class StorageAccessor {
     return this._setItem('last-update-date', lastUpdateDate);
   }
 
-  static _getItem(key) {
-    return localStorage.getItem(key);
+  static getURLs() {
+    return this._getItem('urls', { isObject: true });
+  }
+
+  static setURLs(urls) {
+    return this._setItem('urls', JSON.stringify(urls));
+  }
+
+  static _getItem(key, { isNumber = false, isObject = false } = {}) {
+    const value = localStorage.getItem(key);
+
+    if (isNumber) return parseInt(value, 10);
+    if (isObject) return JSON.parse(value);
+    return value;
   }
 
   static _setItem(key, item) {

@@ -8,9 +8,10 @@ export default class Chikury {
   constructor() {
     // todo localStorageから取得できなかった場合の処理
     const token = StorageAccessor.getToken();
+    const urls = StorageAccessor.getURLs();
 
     this.client = new APIClient(token);
-    this.detector = new SaboriDetector(['https://twitter.com/*']);
+    this.detector = new SaboriDetector(urls);
     this.timeKeeper = new TimeKeeper();
 
     this.isChikurying = false;

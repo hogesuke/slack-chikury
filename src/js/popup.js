@@ -6,6 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   tokenInput.value = StorageAccessor.getToken() || '';
 
+  tokenInput.addEventListener('input', () => {
+    StorageAccessor.setToken(tokenInput.value);
+  });
+
   const openTimeInput = document.querySelector('.input-opentime');
   const closedTimeInput = document.querySelector('.input-closedtime');
   const openTime = StorageAccessor.getOpenTime() || '';
@@ -13,10 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   openTimeInput.value = openTime;
   closedTimeInput.value = closedTime;
-
-  tokenInput.addEventListener('input', () => {
-    StorageAccessor.setToken(tokenInput.value);
-  });
 
   openTimeInput.addEventListener('input', () => {
     let time = openTimeInput.value;
@@ -34,5 +34,18 @@ document.addEventListener('DOMContentLoaded', () => {
       closedTimeInput.value = time;
     }
     StorageAccessor.setClosedTime(time);
+  });
+
+  const urlsTextarea = document.querySelector('.textarea-urls');
+
+  urlsTextarea.value = StorageAccessor.getURLs().join('\n') || '';
+
+  urlsTextarea.addEventListener('input', () => {
+    const urls = (() => {
+      const text = urlsTextarea.value;
+      return text ? text.split(/\n/) : [];
+    })();
+
+    StorageAccessor.setURLs(urls);
   });
 });
