@@ -21,10 +21,10 @@ export default class Chikury {
     chrome.tabs.onUpdated.addListener(this.onTabUpdated.bind(this));
     chrome.tabs.onRemoved.addListener(this.onTabRemoved.bind(this));
 
-    const exists = await this.detector.existsSaboriTab();
+    const tabs = await this.detector.detectSaboriTabs();
     const isWithinTimeRange = this.timeKeeper.isWithinTimeRange();
 
-    if (exists && isWithinTimeRange) {
+    if (!tabs.isEmpty() && isWithinTimeRange) {
       this.startSabori();
     } else {
       this.exitSabori();
@@ -36,10 +36,10 @@ export default class Chikury {
 
     console.log('changeInfo', changeInfo);
 
-    const exists = await this.detector.existsSaboriTab();
+    const tabs = await this.detector.detectSaboriTabs();
     const isWithinTimeRange = this.timeKeeper.isWithinTimeRange();
 
-    if (exists && isWithinTimeRange) {
+    if (!tabs.isEmpty() && isWithinTimeRange) {
       this.startSabori();
     } else {
       this.exitSabori();
@@ -47,8 +47,8 @@ export default class Chikury {
   }
 
   async onTabRemoved() {
-    const exists = await this.detector.existsSaboriTab();
-    if (!exists) {
+    const tabs = await this.detector.detectSaboriTabs();
+    if (tabs.isEmpty()) {
       this.exitSabori();
     }
   }
@@ -75,10 +75,10 @@ export default class Chikury {
 
   async intervalUpdater() {
     console.log('timeUpdateInterval');
-    const exists = await this.detector.existsSaboriTab();
+    const tabs = await this.detector.detectSaboriTabs();
     const isWithinTimeRange = this.timeKeeper.isWithinTimeRange();
 
-    if (!exists || !isWithinTimeRange) {
+    if (tabs.isEmpty() || !isWithinTimeRange) {
       this.exitSabori();
       return;
     }
