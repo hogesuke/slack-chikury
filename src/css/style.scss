@@ -1,3 +1,6 @@
+$field-normal-color: rgba(0, 0, 0, 0.3);
+$field-focus-color: #3379d6;
+
 .form-container {
   padding: 15px 10px;
 }
@@ -20,10 +23,10 @@ input {
   padding: 5px 0;
   font-size: 12px;
   border: none;
-  border-bottom: solid 2px rgba(0, 0, 0, 0.3);
+  border-bottom: solid 2px $field-normal-color;
 
   &:focus {
-    border-bottom: solid 2px #3379d6;
+    border-bottom: solid 2px $field-focus-color;
     outline: 0;
   }
 }
@@ -39,5 +42,19 @@ input {
 
   &::-webkit-clear-button {
     display: none;
+  }
+}
+
+.textarea-urls {
+  width: 300px;
+  height: 200px;
+  margin-top: 5px;
+  font-size: 12px;
+  resize: vertical;
+  border: solid 2px $field-normal-color;
+
+  &:focus {
+    border: solid 2px $field-focus-color;
+    outline: 0;
   }
 }
