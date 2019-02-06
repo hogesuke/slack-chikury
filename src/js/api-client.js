@@ -4,9 +4,9 @@ export default class APIClient {
     this.token = token;
   }
 
-  post (minutes) {
+  post ({ minutes = 0, title = '' } = {}) {
     return this._postProfile({
-      status_text: `${minutes}分`,
+      status_text: `${title} (計 ${minutes}分)`,
       status_emoji: ':herb:'
     });
   }

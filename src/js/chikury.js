@@ -25,7 +25,7 @@ export default class Chikury {
     const isWithinTimeRange = this.timeKeeper.isWithinTimeRange();
 
     if (!tabs.isEmpty() && isWithinTimeRange) {
-      this.startSabori();
+      this.startSabori(tabs);
     } else {
       this.exitSabori();
     }
@@ -40,7 +40,7 @@ export default class Chikury {
     const isWithinTimeRange = this.timeKeeper.isWithinTimeRange();
 
     if (!tabs.isEmpty() && isWithinTimeRange) {
-      this.startSabori();
+      this.startSabori(tabs);
     } else {
       this.exitSabori();
     }
@@ -53,7 +53,7 @@ export default class Chikury {
     }
   }
 
-  startSabori() {
+  startSabori(tabs) {
     // すでにチクり中であれば何もしない
     if (this.isChikurying) {
       console.log('startSabori 何もしない')
@@ -61,14 +61,16 @@ export default class Chikury {
     }
 
     console.log('startSabori');
+    console.log('tabs', tabs);
 
     if (this.timeUpdateInterval) {
       clearInterval(this.timeUpdateInterval);
     }
 
     const saboriTime = this.timeKeeper.calcTotalSaboriTime(new Date());
+    const tab = tabs.getCurrentSaboriTab();
 
-    this.postChikury(saboriTime);
+    this.postChikury(saboriTime, tab);
 
     this.timeUpdateInterval = setInterval(this.intervalUpdater.bind(this), 10000); // todo intervalの間隔を広くするように要修正（30000ぐらい)
   }
@@ -86,10 +88,11 @@ export default class Chikury {
     const lastUpdateMinutes = StorageAccessor.getProgressedMinutes();
     const lastUpdateDate = StorageAccessor.getLastUpdateDate() ? new Date(StorageAccessor.getLastUpdateDate()) : null
     const saboriTime = this.timeKeeper.calcTotalSaboriTime(lastUpdateDate);
+    const tab = tabs.getCurrentSaboriTab();
 
     // 経過分が変わったときだけ更新
     if (lastUpdateMinutes !== saboriTime.minutes) {
-      this.postChikury(saboriTime);
+      this.postChikury(saboriTime, tab);
     }
   }
 
@@ -110,10 +113,10 @@ export default class Chikury {
     this.clearChikury()
   }
 
-  postChikury(saboriTime) {
+  postChikury(saboriTime, tab) {
 
     this.client
-      .post(saboriTime.minutes)
+      .post({ minutes: saboriTime.minutes, title: tab.title })
       .then(() => {
         StorageAccessor.setLastUpdateDate(new Date().toISOString());
         StorageAccessor.setProgressedMinutes(saboriTime.minutes);

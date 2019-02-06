@@ -3,7 +3,7 @@ export default class SaboriTabCollection {
   constructor(tabs = []) {
     this.tabs = tabs;
   }
-  
+
   isEmpty() {
     return this.tabs.length <= 0;
   }
