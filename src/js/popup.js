@@ -36,6 +36,29 @@ document.addEventListener('DOMContentLoaded', () => {
     StorageAccessor.setClosedTime(time);
   });
 
+  const emojiInput = document.querySelector('.input-emoji');
+  const emoji = StorageAccessor.getEmoji() || '';
+
+  emojiInput.value = emoji;
+
+  emojiInput.addEventListener('input', () => {
+    let emoji = emojiInput.value;
+    if (!emoji) {
+      emoji = 'eyes';
+      emojiInput.value = emoji;
+    }
+    StorageAccessor.setEmoji(emoji);
+  });
+
+  closedTimeInput.addEventListener('input', () => {
+    let time = closedTimeInput.value;
+    if (!time) {
+      time = '18:00';
+      closedTimeInput.value = time;
+    }
+    StorageAccessor.setClosedTime(time);
+  });
+
   const urlsTextarea = document.querySelector('.textarea-urls');
 
   urlsTextarea.value = StorageAccessor.getURLs().join('\n') || '';
