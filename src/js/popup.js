@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tokenInput.value = StorageAccessor.getToken() || '';
 
-    tokenInput.addEventListener('input', () => {
+    tokenInput.addEventListener('blur', () => {
       StorageAccessor.setToken(tokenInput.value);
     });
   }
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     openTimeInput.value = openTime;
     closedTimeInput.value = closedTime;
 
-    openTimeInput.addEventListener('input', () => {
+    openTimeInput.addEventListener('blur', () => {
       let time = openTimeInput.value;
       if (!time) {
         time = '09:00';
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
       StorageAccessor.setOpenTime(time);
     });
 
-    closedTimeInput.addEventListener('input', () => {
+    closedTimeInput.addEventListener('blur', () => {
       let time = closedTimeInput.value;
       if (!time) {
         time = '18:00';
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     emojiInput.value = emoji;
 
-    emojiInput.addEventListener('input', () => {
+    emojiInput.addEventListener('blur', () => {
       let emoji = emojiInput.value;
       if (!emoji) {
         emoji = 'eyes';
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     urlsTextarea.value = StorageAccessor.getURLs().join('\n') || '';
 
-    urlsTextarea.addEventListener('input', () => {
+    urlsTextarea.addEventListener('blur', () => {
       const urls = (() => {
         const text = urlsTextarea.value;
         return text ? text.split(/\n/) : [];

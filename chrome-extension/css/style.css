@@ -32,6 +32,10 @@ input {
   .input-endtime::-webkit-clear-button {
     display: none; }
 
+.input-emoji {
+  width: 50px;
+  text-align: center; }
+
 .textarea-urls {
   width: 300px;
   height: 200px;
