@@ -1,3 +1,5 @@
+import StorageAccessor from './storage-accessor'
+
 export default class APIClient {
 
   constructor (token) {
@@ -6,15 +8,15 @@ export default class APIClient {
 
   post ({ minutes = 0, title = '' } = {}) {
     return this._postProfile({
-      status_text: `${title} (計 ${minutes}分)`,
-      status_emoji: ':herb:'
+      status_text: `:shushing_face: [見てる] [${title}] [計 ${minutes}分]`,
+      status_emoji: `:${StorageAccessor.getEmoji()}:`
     });
   }
 
   clear () {
     return this._postProfile({
       status_text: '',
-      status_emoji: ':palm_tree:'
+      status_emoji: ''
     });
   }
 

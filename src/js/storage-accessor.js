@@ -24,6 +24,14 @@ export default class StorageAccessor {
     return this._setItem('closed-time', closedTime);
   }
 
+  static getEmoji() {
+    return this._getItem('emoji');
+  }
+
+  static setEmoji(emoji) {
+    return this._setItem('emoji', emoji);
+  }
+
   static getProgressedSeconds() {
     return this._getItem('progressed-seconds', { isNumber: true });
   }
