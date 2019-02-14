@@ -2,6 +2,7 @@ export default class SaboriTabCollection {
 
   constructor(tabs = []) {
     this.tabs = tabs;
+    console.log('tabs', tabs);
   }
 
   isEmpty() {
