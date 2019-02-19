@@ -24,6 +24,14 @@ export default class StorageAccessor {
     return this._setItem('closed-time', closedTime);
   }
 
+  static getDayOfTheWeek() {
+    return this._getItem('dayoftheweek', { isObject: true });
+  }
+
+  static setDayOfTheWeek(days) {
+    return this._setItem('dayoftheweek', JSON.stringify(days));
+  }
+
   static getEmoji() {
     return this._getItem('emoji');
   }

@@ -42,6 +42,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Day of the week
+  {
+    const dayOfTheWeekForm = document.querySelector('.dayoftheweek-form');
+    const days = StorageAccessor.getDayOfTheWeek() || [];
+
+    days.forEach(day => {
+      (dayOfTheWeekForm.querySelector(`.input-dayoftheweek[value=${day}]`) || {}).checked = true;
+    });
+
+    dayOfTheWeekForm.addEventListener('input', () => {
+      const checks = Array.from(dayOfTheWeekForm.querySelectorAll('.input-dayoftheweek:checked')).map(a => a.value);
+      StorageAccessor.setDayOfTheWeek(checks);
+    });
+  }
+
   // emoji
   {
     const emojiInput = document.querySelector('.input-emoji');
