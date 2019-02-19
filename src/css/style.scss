@@ -1,22 +1,12 @@
 $field-normal-color: rgba(0, 0, 0, 0.3);
 $field-focus-color: #3379d6;
 
-.form-container {
-  padding: 15px 10px;
-}
-
 form {
   padding: 10px 0;
 }
 
-.form-field {
-  position: relative;
-}
-
-.form-label {
-  display: block;
-  font-size: 11px;
-  color: rgba(0, 0, 0, 0.5);
+input, textarea, label {
+  color: #333;
 }
 
 input {
@@ -31,35 +21,61 @@ input {
   }
 }
 
-.input-token {
-  width: 300px;
+.form-container {
+  padding: 15px 10px;
 }
 
-.input-starttime,
-.input-endtime {
-  width: 80px;
-  text-align: center;
+.form-field {
+  position: relative;
+}
 
-  &::-webkit-clear-button {
-    display: none;
+.form-label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: #777;
+
+  &.extend-margin {
+    margin-bottom: 10px;
   }
 }
 
-.input-emoji {
-  width: 50px;
-  text-align: center;
+.token-form {
+  .input-token {
+    width: 300px;
+  }
 }
 
-.textarea-urls {
-  width: 300px;
-  height: 200px;
-  margin-top: 5px;
-  font-size: 12px;
-  resize: vertical;
-  border: solid 2px $field-normal-color;
+.range-form {
+  .input-starttime,
+  .input-endtime {
+    width: 80px;
+    text-align: center;
 
-  &:focus {
-    border: solid 2px $field-focus-color;
-    outline: 0;
+    &::-webkit-clear-button {
+      display: none;
+    }
+  }
+}
+
+.emoji-form {
+  .input-emoji {
+    width: 50px;
+    text-align: center;
+  }
+}
+
+.url-form {
+  .textarea-urls {
+    width: 300px;
+    height: 200px;
+    font-size: 12px;
+    resize: vertical;
+    border: solid 2px $field-normal-color;
+
+    &:focus {
+      border: solid 2px $field-focus-color;
+      outline: 0;
+    }
   }
 }

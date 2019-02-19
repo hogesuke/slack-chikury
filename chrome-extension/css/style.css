@@ -1,16 +1,8 @@
-.form-container {
-  padding: 15px 10px; }
-
 form {
   padding: 10px 0; }
 
-.form-field {
-  position: relative; }
-
-.form-label {
-  display: block;
-  font-size: 11px;
-  color: rgba(0, 0, 0, 0.5); }
+input, textarea, label {
+  color: #333; }
 
 input {
   padding: 5px 0;
@@ -21,29 +13,42 @@ input {
     border-bottom: solid 2px #3379d6;
     outline: 0; }
 
-.input-token {
+.form-container {
+  padding: 15px 10px; }
+
+.form-field {
+  position: relative; }
+
+.form-label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: #777; }
+  .form-label.extend-margin {
+    margin-bottom: 10px; }
+
+.token-form .input-token {
   width: 300px; }
 
-.input-starttime,
-.input-endtime {
+.range-form .input-starttime,
+.range-form .input-endtime {
   width: 80px;
   text-align: center; }
-  .input-starttime::-webkit-clear-button,
-  .input-endtime::-webkit-clear-button {
+  .range-form .input-starttime::-webkit-clear-button,
+  .range-form .input-endtime::-webkit-clear-button {
     display: none; }
 
-.input-emoji {
+.emoji-form .input-emoji {
   width: 50px;
   text-align: center; }
 
-.textarea-urls {
+.url-form .textarea-urls {
   width: 300px;
   height: 200px;
-  margin-top: 5px;
   font-size: 12px;
   resize: vertical;
   border: solid 2px rgba(0, 0, 0, 0.3); }
-  .textarea-urls:focus {
+  .url-form .textarea-urls:focus {
     border: solid 2px #3379d6;
     outline: 0; }
 
