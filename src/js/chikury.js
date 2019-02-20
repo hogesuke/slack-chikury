@@ -1,6 +1,7 @@
 import APIClient from './api-client';
 import SaboriDetector from './sabori-detector';
 import TimeKeeper from './time-keeper';
+import TimeCalculator from './time-calculator';
 import StorageAccessor from './storage-accessor';
 
 export default class Chikury {
@@ -12,7 +13,6 @@ export default class Chikury {
 
     this.client = new APIClient(token);
     this.detector = new SaboriDetector(urls);
-    this.timeKeeper = new TimeKeeper();
 
     this.isChikurying = false;
   }
@@ -22,9 +22,8 @@ export default class Chikury {
     chrome.tabs.onRemoved.addListener(this.onTabRemoved.bind(this));
 
     const tabs = await this.detector.detectSaboriTabs();
-    const isWithinTimeRange = this.timeKeeper.isWithinTimeRange();
 
-    if (!tabs.isEmpty() && isWithinTimeRange) {
+    if (!tabs.isEmpty() && TimeKeeper.isApplied()) {
       this.startSabori(tabs);
     } else {
       this.exitSabori();
@@ -37,9 +36,8 @@ export default class Chikury {
     console.log('changeInfo', changeInfo);
 
     const tabs = await this.detector.detectSaboriTabs();
-    const isWithinTimeRange = this.timeKeeper.isWithinTimeRange();
 
-    if (!tabs.isEmpty() && isWithinTimeRange) {
+    if (!tabs.isEmpty() && TimeKeeper.isApplied()) {
       this.startSabori(tabs);
     } else {
       this.exitSabori();
@@ -67,7 +65,7 @@ export default class Chikury {
       clearInterval(this.timeUpdateInterval);
     }
 
-    const saboriTime = this.timeKeeper.calcTotalSaboriTime(new Date());
+    const saboriTime = TimeCalculator.calcTotalSaboriTime(new Date());
     const tab = tabs.getCurrentSaboriTab();
 
     this.postChikury(saboriTime, tab.title);
@@ -78,16 +76,15 @@ export default class Chikury {
   async intervalUpdater() {
     console.log('timeUpdateInterval');
     const tabs = await this.detector.detectSaboriTabs();
-    const isWithinTimeRange = this.timeKeeper.isWithinTimeRange();
 
-    if (tabs.isEmpty() || !isWithinTimeRange) {
+    if (tabs.isEmpty() || !TimeKeeper.isApplied()) {
       this.exitSabori();
       return;
     }
 
     const lastUpdateMinutes = StorageAccessor.getProgressedMinutes();
     const lastUpdateDate = StorageAccessor.getLastUpdateDate() ? new Date(StorageAccessor.getLastUpdateDate()) : null
-    const saboriTime = this.timeKeeper.calcTotalSaboriTime(lastUpdateDate);
+    const saboriTime = TimeCalculator.calcTotalSaboriTime(lastUpdateDate);
     const tab = tabs.getCurrentSaboriTab();
 
     // 経過分が変わったときだけ更新
@@ -106,7 +103,7 @@ export default class Chikury {
 
     clearInterval(this.timeUpdateInterval)
 
-    const saboriTime = this.timeKeeper.calcTotalSaboriTime();
+    const saboriTime = TimeCalculator.calcTotalSaboriTime();
 
     StorageAccessor.setProgressedSeconds(saboriTime.seconds);
 

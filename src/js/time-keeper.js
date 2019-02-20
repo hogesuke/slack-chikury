@@ -2,17 +2,19 @@ import StorageAccessor from './storage-accessor';
 
 export default class TimeKeeper {
 
-  constructor() {}
+  static isApplied() {
+    const current = new Date();
+    return this._isWithinTimeRange(current) && this._isTargetDayOfTheWeek(current);
+  }
 
-  isWithinTimeRange() {
+  static _isWithinTimeRange(date) {
     // todo localStorageから取得できなかった場合の処理
-    this.openTime = StorageAccessor.getOpenTime();
-    this.closedTime = StorageAccessor.getClosedTime();
+    const openTime = StorageAccessor.getOpenTime();
+    const closedTime = StorageAccessor.getClosedTime();
 
-    const date = new Date();
     const current = this._getParsedTime(`${date.getHours()}:${date.getMinutes()}`);
-    const open = this._getParsedTime(this.openTime);
-    const closed = this._getParsedTime(this.closedTime);
+    const open = this._getParsedTime(openTime);
+    const closed = this._getParsedTime(closedTime);
 
     if (current.hours < open.hours || closed.hours < current.hours) {
       return false;
@@ -27,45 +29,17 @@ export default class TimeKeeper {
     return true;
   }
 
-  _getParsedTime(timeString) {
+  static _isTargetDayOfTheWeek(date) {
+    const targetDays = StorageAccessor.getDayOfTheWeek();
+    const currentDay = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][date.getDay()]
+    return targetDays.includes(currentDay);
+  }
+
+  static _getParsedTime(timeString) {
     const time = timeString.split(':');
     return {
       hours: parseInt(time[0]),
       minutes: parseInt(time[1])
     }
-  }
-
-  calcTotalSaboriTime(fromDate) {
-    const lastUpdateMinutes = parseInt(StorageAccessor.getProgressedMinutes()) || 0;
-    const savedSeconds = parseInt(StorageAccessor.getProgressedSeconds()) || 0;
-
-    if (!fromDate) {
-      return {
-        seconds: savedSeconds,
-        minutes: lastUpdateMinutes
-      }
-    }
-
-    const lastUpdateDateString = StorageAccessor.getLastUpdateDate();
-    const lastDate = lastUpdateDateString ? new Date(lastUpdateDateString) : null;
-    const currentDate = new Date();
-
-    // 日付をまたいだ場合リセット
-    if (this._getYYYYMD(lastDate) !== this._getYYYYMD(currentDate)) {
-      return 0;
-    }
-
-    const seconds = ((currentDate - fromDate) / 1000) + savedSeconds
-    const minutes = Math.ceil(seconds / 60);
-
-    return {
-      seconds,
-      minutes
-    };
-  }
-
-  _getYYYYMD(date) {
-    if (!date) return '';
-    return '' + date.getFullYear() + (date.getMonth() + 1) + date.getDate();
   }
 }
