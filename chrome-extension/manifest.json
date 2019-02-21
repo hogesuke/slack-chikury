@@ -24,7 +24,7 @@
   },
   "content_scripts": [
     {
-      "matches": [ "https://twitter.com/*" ],
+      "matches": [ "http://*/*", "https://*/*" ],
       "js"     : [],
       "css"    : [ "css/style.css" ],
       "run_at" : "document_start"
