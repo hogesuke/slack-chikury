@@ -1,5 +1,6 @@
 import '../css/style.scss';
 import StorageAccessor from './storage-accessor';
+import * as Constants from './constants';
 
 document.addEventListener('DOMContentLoaded', () => {
   // token
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     openTimeInput.addEventListener('blur', () => {
       let time = openTimeInput.value;
       if (!time) {
-        time = '09:00';
+        time = Constants.DEFAULT.OPEN_TIME;
         openTimeInput.value = time;
       }
       StorageAccessor.setOpenTime(time);
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     closedTimeInput.addEventListener('blur', () => {
       let time = closedTimeInput.value;
       if (!time) {
-        time = '18:00';
+        time = Constants.DEFAULT.CLOSED_TIME;
         closedTimeInput.value = time;
       }
       StorageAccessor.setClosedTime(time);
@@ -67,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     emojiInput.addEventListener('blur', () => {
       let emoji = emojiInput.value;
       if (!emoji) {
-        emoji = 'eyes';
+        emoji = Constants.DEFAULT.EMOJI;
         emojiInput.value = emoji;
       }
       StorageAccessor.setEmoji(emoji);
@@ -78,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
   {
     const urlsTextarea = document.querySelector('.textarea-urls');
 
-    urlsTextarea.value = StorageAccessor.getURLs().join('\n') || '';
+    urlsTextarea.value = (StorageAccessor.getURLs() || []).join('\n');
 
     urlsTextarea.addEventListener('blur', () => {
       const urls = (() => {

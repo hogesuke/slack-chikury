@@ -2,7 +2,8 @@ import APIClient from './api-client';
 import SaboriDetector from './sabori-detector';
 import TimeKeeper from './time-keeper';
 import TimeCalculator from './time-calculator';
-import StorageAccessor from './storage-accessor';
+import StorageAccessor from './storage-accessor'; // todo クラス名変える
+import * as Constants from './constants';
 
 export default class Chikury {
 
@@ -15,6 +16,14 @@ export default class Chikury {
     this.detector = new SaboriDetector(urls);
 
     this.isChikurying = false;
+  }
+
+  init() {
+    StorageAccessor.getOpenTime() || StorageAccessor.setOpenTime(Constants.DEFAULT.OPEN_TIME);
+    StorageAccessor.getClosedTime() || StorageAccessor.setClosedTime(Constants.DEFAULT.CLOSED_TIME);
+    StorageAccessor.getDayOfTheWeek() || StorageAccessor.setDayOfTheWeek(Constants.DEFAULT.DAY_OF_THE_WEEK);
+    StorageAccessor.getEmoji() || StorageAccessor.setEmoji(Constants.DEFAULT.EMOJI);
+    StorageAccessor.getURLs() || StorageAccessor.setURLs(Constants.DEFAULT.URLS);
   }
 
   async run() {
