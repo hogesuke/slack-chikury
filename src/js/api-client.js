@@ -8,7 +8,7 @@ export default class APIClient {
 
   post ({ minutes = 0, title = '' } = {}) {
     return this._postProfile({
-      status_text: `:shushing_face: [見てる] [${title}] [計 ${minutes}分]`,
+      status_text: `[見てる] [${title}] [計 ${minutes}分]`,
       status_emoji: `:${WebStorage.getEmoji()}:`
     });
   }
