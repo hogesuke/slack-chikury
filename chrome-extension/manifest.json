@@ -12,7 +12,7 @@
     "tabs",
     "https://slack.com/"
   ],
-  "page_action": {
+  "browser_action": {
     "default_icon": {
       "48": "img/icon48.png"
     },
@@ -21,13 +21,5 @@
   },
   "background": {
     "scripts": ["js/background.js"]
-  },
-  "content_scripts": [
-    {
-      "matches": [ "http://*/*", "https://*/*" ],
-      "js"     : [],
-      "css"    : [ "css/style.css" ],
-      "run_at" : "document_start"
-    }
-  ]
+  }
 }
