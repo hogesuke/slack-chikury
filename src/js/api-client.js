@@ -1,4 +1,4 @@
-import StorageAccessor from './storage-accessor'
+import WebStorage from './web-storage'
 
 export default class APIClient {
 
@@ -9,7 +9,7 @@ export default class APIClient {
   post ({ minutes = 0, title = '' } = {}) {
     return this._postProfile({
       status_text: `:shushing_face: [見てる] [${title}] [計 ${minutes}分]`,
-      status_emoji: `:${StorageAccessor.getEmoji()}:`
+      status_emoji: `:${WebStorage.getEmoji()}:`
     });
   }
 

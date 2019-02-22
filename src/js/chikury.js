@@ -2,15 +2,15 @@ import APIClient from './api-client';
 import SaboriDetector from './sabori-detector';
 import TimeKeeper from './time-keeper';
 import TimeCalculator from './time-calculator';
-import StorageAccessor from './storage-accessor'; // todo クラス名変える
+import WebStorage from './web-storage';
 import * as Constants from './constants';
 
 export default class Chikury {
 
   constructor() {
     // todo localStorageから取得できなかった場合の処理
-    const token = StorageAccessor.getToken();
-    const urls = StorageAccessor.getURLs();
+    const token = WebStorage.getToken();
+    const urls = WebStorage.getURLs();
 
     this.client = new APIClient(token);
     this.detector = new SaboriDetector(urls);
@@ -19,11 +19,11 @@ export default class Chikury {
   }
 
   init() {
-    StorageAccessor.getOpenTime() || StorageAccessor.setOpenTime(Constants.DEFAULT.OPEN_TIME);
-    StorageAccessor.getClosedTime() || StorageAccessor.setClosedTime(Constants.DEFAULT.CLOSED_TIME);
-    StorageAccessor.getDayOfTheWeek() || StorageAccessor.setDayOfTheWeek(Constants.DEFAULT.DAY_OF_THE_WEEK);
-    StorageAccessor.getEmoji() || StorageAccessor.setEmoji(Constants.DEFAULT.EMOJI);
-    StorageAccessor.getURLs() || StorageAccessor.setURLs(Constants.DEFAULT.URLS);
+    WebStorage.getOpenTime() || WebStorage.setOpenTime(Constants.DEFAULT.OPEN_TIME);
+    WebStorage.getClosedTime() || WebStorage.setClosedTime(Constants.DEFAULT.CLOSED_TIME);
+    WebStorage.getDayOfTheWeek() || WebStorage.setDayOfTheWeek(Constants.DEFAULT.DAY_OF_THE_WEEK);
+    WebStorage.getEmoji() || WebStorage.setEmoji(Constants.DEFAULT.EMOJI);
+    WebStorage.getURLs() || WebStorage.setURLs(Constants.DEFAULT.URLS);
   }
 
   async run() {
@@ -91,8 +91,8 @@ export default class Chikury {
       return;
     }
 
-    const lastUpdateMinutes = StorageAccessor.getProgressedMinutes();
-    const lastUpdateDate = StorageAccessor.getLastUpdateDate() ? new Date(StorageAccessor.getLastUpdateDate()) : null
+    const lastUpdateMinutes = WebStorage.getProgressedMinutes();
+    const lastUpdateDate = WebStorage.getLastUpdateDate() ? new Date(WebStorage.getLastUpdateDate()) : null
     const saboriTime = TimeCalculator.calcTotalSaboriTime(lastUpdateDate);
     const tab = tabs.getCurrentSaboriTab();
 
@@ -114,7 +114,7 @@ export default class Chikury {
 
     const saboriTime = TimeCalculator.calcTotalSaboriTime();
 
-    StorageAccessor.setProgressedSeconds(saboriTime.seconds);
+    WebStorage.setProgressedSeconds(saboriTime.seconds);
 
     this.clearChikury()
   }
@@ -124,9 +124,9 @@ export default class Chikury {
     this.client
       .post({ minutes: saboriTime.minutes, title })
       .then(() => {
-        StorageAccessor.setLastUpdateDate(new Date().toISOString());
-        StorageAccessor.setProgressedMinutes(saboriTime.minutes);
-        StorageAccessor.setProgressedSeconds(saboriTime.seconds);
+        WebStorage.setLastUpdateDate(new Date().toISOString());
+        WebStorage.setProgressedMinutes(saboriTime.minutes);
+        WebStorage.setProgressedSeconds(saboriTime.seconds);
         this.isChikurying = true;
       });
   }

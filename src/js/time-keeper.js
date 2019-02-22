@@ -1,4 +1,4 @@
-import StorageAccessor from './storage-accessor';
+import WebStorage from './web-storage';
 
 export default class TimeKeeper {
 
@@ -9,8 +9,8 @@ export default class TimeKeeper {
 
   static _isWithinTimeRange(date) {
     // todo localStorageから取得できなかった場合の処理
-    const openTime = StorageAccessor.getOpenTime();
-    const closedTime = StorageAccessor.getClosedTime();
+    const openTime = WebStorage.getOpenTime();
+    const closedTime = WebStorage.getClosedTime();
 
     const current = this._getParsedTime(`${date.getHours()}:${date.getMinutes()}`);
     const open = this._getParsedTime(openTime);
@@ -30,7 +30,7 @@ export default class TimeKeeper {
   }
 
   static _isTargetDayOfTheWeek(date) {
-    const targetDays = StorageAccessor.getDayOfTheWeek();
+    const targetDays = WebStorage.getDayOfTheWeek();
     const currentDay = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][date.getDay()]
     return targetDays.includes(currentDay);
   }

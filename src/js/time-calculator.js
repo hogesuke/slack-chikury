@@ -1,10 +1,10 @@
-import StorageAccessor from './storage-accessor';
+import WebStorage from './web-storage';
 
 export default class TimeCalculator {
 
   static calcTotalSaboriTime(fromDate) {
-    const lastUpdateMinutes = parseInt(StorageAccessor.getProgressedMinutes()) || 0;
-    const savedSeconds = parseInt(StorageAccessor.getProgressedSeconds()) || 0;
+    const lastUpdateMinutes = parseInt(WebStorage.getProgressedMinutes()) || 0;
+    const savedSeconds = parseInt(WebStorage.getProgressedSeconds()) || 0;
 
     if (!fromDate) {
       return {
@@ -13,7 +13,7 @@ export default class TimeCalculator {
       }
     }
 
-    const lastUpdateDateString = StorageAccessor.getLastUpdateDate();
+    const lastUpdateDateString = WebStorage.getLastUpdateDate();
     const lastDate = lastUpdateDateString ? new Date(lastUpdateDateString) : null;
     const currentDate = new Date();
 

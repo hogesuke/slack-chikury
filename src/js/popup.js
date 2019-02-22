@@ -1,5 +1,5 @@
 import '../css/style.scss';
-import StorageAccessor from './storage-accessor';
+import WebStorage from './web-storage';
 import * as Constants from './constants';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
   {
     const tokenInput = document.querySelector('.input-token');
 
-    tokenInput.value = StorageAccessor.getToken() || '';
+    tokenInput.value = WebStorage.getToken() || '';
 
     tokenInput.addEventListener('blur', () => {
-      StorageAccessor.setToken(tokenInput.value);
+      WebStorage.setToken(tokenInput.value);
     });
   }
 
@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
   {
     const openTimeInput = document.querySelector('.input-opentime');
     const closedTimeInput = document.querySelector('.input-closedtime');
-    const openTime = StorageAccessor.getOpenTime() || '';
-    const closedTime = StorageAccessor.getClosedTime() || '';
+    const openTime = WebStorage.getOpenTime() || '';
+    const closedTime = WebStorage.getClosedTime() || '';
 
     openTimeInput.value = openTime;
     closedTimeInput.value = closedTime;
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         time = Constants.DEFAULT.OPEN_TIME;
         openTimeInput.value = time;
       }
-      StorageAccessor.setOpenTime(time);
+      WebStorage.setOpenTime(time);
     });
 
     closedTimeInput.addEventListener('blur', () => {
@@ -39,14 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
         time = Constants.DEFAULT.CLOSED_TIME;
         closedTimeInput.value = time;
       }
-      StorageAccessor.setClosedTime(time);
+      WebStorage.setClosedTime(time);
     });
   }
 
   // Day of the week
   {
     const dayOfTheWeekForm = document.querySelector('.dayoftheweek-form');
-    const days = StorageAccessor.getDayOfTheWeek() || [];
+    const days = WebStorage.getDayOfTheWeek() || [];
 
     days.forEach(day => {
       (dayOfTheWeekForm.querySelector(`.input-dayoftheweek[value=${day}]`) || {}).checked = true;
@@ -54,14 +54,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     dayOfTheWeekForm.addEventListener('input', () => {
       const checks = Array.from(dayOfTheWeekForm.querySelectorAll('.input-dayoftheweek:checked')).map(a => a.value);
-      StorageAccessor.setDayOfTheWeek(checks);
+      WebStorage.setDayOfTheWeek(checks);
     });
   }
 
   // emoji
   {
     const emojiInput = document.querySelector('.input-emoji');
-    const emoji = StorageAccessor.getEmoji() || '';
+    const emoji = WebStorage.getEmoji() || '';
 
     emojiInput.value = emoji;
 
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         emoji = Constants.DEFAULT.EMOJI;
         emojiInput.value = emoji;
       }
-      StorageAccessor.setEmoji(emoji);
+      WebStorage.setEmoji(emoji);
     });
   }
 
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
   {
     const urlsTextarea = document.querySelector('.textarea-urls');
 
-    urlsTextarea.value = (StorageAccessor.getURLs() || []).join('\n');
+    urlsTextarea.value = (WebStorage.getURLs() || []).join('\n');
 
     urlsTextarea.addEventListener('blur', () => {
       const urls = (() => {
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return text ? text.split(/\n/) : [];
       })();
 
-      StorageAccessor.setURLs(urls);
+      WebStorage.setURLs(urls);
     });
   }
 });

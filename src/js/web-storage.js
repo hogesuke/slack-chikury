@@ -1,4 +1,4 @@
-export default class StorageAccessor {
+export default class WebStorage {
 
   static getToken() {
     return this._getItem('token');
