@@ -1,15 +1,16 @@
 import SaboriTabCollection from './sabori-tab-collection';
+import WebStorage from './web-storage';
 
 export default class SaboriDetector {
 
-  constructor(targetUrls = []) {
-    this.targetUrls = targetUrls;
-  }
+  static async detectSaboriTabs() {
+    const urls = WebStorage.getURLs();
 
-  async detectSaboriTabs() {
+    if (!urls) return;
+
     return new Promise(resolve => {
       chrome.tabs.query({
-        url: this.targetUrls
+        url: urls
       }, tabs => {
         resolve(new SaboriTabCollection(tabs));
       });

@@ -8,13 +8,7 @@ import * as Constants from './constants';
 export default class Chikury {
 
   constructor() {
-    // todo localStorageから取得できなかった場合の処理
-    const token = WebStorage.getToken();
-    const urls = WebStorage.getURLs();
-
-    this.client = new APIClient(token);
-    this.detector = new SaboriDetector(urls);
-
+    this.init();
     this.isChikurying = false;
   }
 
@@ -30,7 +24,7 @@ export default class Chikury {
     chrome.tabs.onUpdated.addListener(this.onTabUpdated.bind(this));
     chrome.tabs.onRemoved.addListener(this.onTabRemoved.bind(this));
 
-    const tabs = await this.detector.detectSaboriTabs();
+    const tabs = await SaboriDetector.detectSaboriTabs();
 
     if (!tabs.isEmpty() && TimeKeeper.isApplied()) {
       this.startSabori(tabs);
@@ -44,7 +38,7 @@ export default class Chikury {
 
     console.log('changeInfo', changeInfo);
 
-    const tabs = await this.detector.detectSaboriTabs();
+    const tabs = await SaboriDetector.detectSaboriTabs();
 
     if (!tabs.isEmpty() && TimeKeeper.isApplied()) {
       this.startSabori(tabs);
@@ -54,7 +48,7 @@ export default class Chikury {
   }
 
   async onTabRemoved() {
-    const tabs = await this.detector.detectSaboriTabs();
+    const tabs = await SaboriDetector.detectSaboriTabs();
     if (tabs.isEmpty()) {
       this.exitSabori();
     }
@@ -84,7 +78,7 @@ export default class Chikury {
 
   async intervalUpdater() {
     console.log('timeUpdateInterval');
-    const tabs = await this.detector.detectSaboriTabs();
+    const tabs = await SaboriDetector.detectSaboriTabs();
 
     if (tabs.isEmpty() || !TimeKeeper.isApplied()) {
       this.exitSabori();
@@ -120,22 +114,26 @@ export default class Chikury {
   }
 
   postChikury(saboriTime, title) {
-
-    this.client
+    return APIClient
       .post({ minutes: saboriTime.minutes, title })
       .then(() => {
         WebStorage.setLastUpdateDate(new Date().toISOString());
+        this.isChikurying = true;
+      }).catch(() => {
+        // NOP
+      }).finally(() => {
         WebStorage.setProgressedMinutes(saboriTime.minutes);
         WebStorage.setProgressedSeconds(saboriTime.seconds);
-        this.isChikurying = true;
       });
   }
 
   clearChikury() {
-    this.client
+    return APIClient
       .clear()
       .then(() => {
         this.isChikurying = false;
+      }).catch(() => {
+        // NOP
       });
   }
 }

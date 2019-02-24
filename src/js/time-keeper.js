@@ -8,9 +8,10 @@ export default class TimeKeeper {
   }
 
   static _isWithinTimeRange(date) {
-    // todo localStorageから取得できなかった場合の処理
     const openTime = WebStorage.getOpenTime();
     const closedTime = WebStorage.getClosedTime();
+
+    if (!openTime || !closedTime) return false;
 
     const current = this._getParsedTime(`${date.getHours()}:${date.getMinutes()}`);
     const open = this._getParsedTime(openTime);
