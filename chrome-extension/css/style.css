@@ -6,7 +6,8 @@ body {
 header {
   padding: 18px;
   color: #fff;
-  background: #1060da; }
+  background: #1060da;
+  box-shadow: 0 0 3px 1px #aaa; }
   header h1 {
     margin: 0;
     font-size: 16px;
