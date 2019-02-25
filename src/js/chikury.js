@@ -3,6 +3,7 @@ import SaboriDetector from './sabori-detector';
 import TimeKeeper from './time-keeper';
 import TimeCalculator from './time-calculator';
 import WebStorage from './web-storage';
+import BadgeManager from './badge-manager';
 import * as Constants from './constants';
 
 export default class Chikury {
@@ -23,6 +24,9 @@ export default class Chikury {
   async run() {
     chrome.tabs.onUpdated.addListener(this.onTabUpdated.bind(this));
     chrome.tabs.onRemoved.addListener(this.onTabRemoved.bind(this));
+
+    BadgeManager.updateMinutes(WebStorage.getProgressedMinutes());
+    BadgeManager.turnOff();
 
     const tabs = await SaboriDetector.detectSaboriTabs();
 
@@ -73,6 +77,9 @@ export default class Chikury {
 
     this.postChikury(saboriTime, tab.title);
 
+    BadgeManager.updateMinutes(saboriTime.minutes);
+    BadgeManager.turnOn();
+
     this.timeUpdateInterval = setInterval(this.intervalUpdater.bind(this), 10000); // todo intervalの間隔を広くするように要修正（30000ぐらい)
   }
 
@@ -93,6 +100,7 @@ export default class Chikury {
     // 経過分が変わったときだけ更新
     if (lastUpdateMinutes !== saboriTime.minutes) {
       this.postChikury(saboriTime, tab.title);
+      BadgeManager.updateMinutes(saboriTime.minutes);
     }
   }
 
@@ -106,9 +114,12 @@ export default class Chikury {
 
     clearInterval(this.timeUpdateInterval)
 
+    // TODO: これなにしてるんだっけ？
     const saboriTime = TimeCalculator.calcTotalSaboriTime();
-
+    // TODO: これなにしてるんだっけ？
     WebStorage.setProgressedSeconds(saboriTime.seconds);
+
+    BadgeManager.turnOff();
 
     this.clearChikury()
   }
