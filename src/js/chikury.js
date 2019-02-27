@@ -14,6 +14,9 @@ export default class Chikury {
   }
 
   init() {
+    WebStorage.getProgressedMinutes() !== null || WebStorage.setProgressedMinutes(0);
+    WebStorage.getProgressedSeconds() !== null || WebStorage.setProgressedSeconds(0);
+    WebStorage.getLastUpdateDate() || WebStorage.setLastUpdateDate(new Date().toISOString());
     WebStorage.getOpenTime() || WebStorage.setOpenTime(Constants.DEFAULT.OPEN_TIME);
     WebStorage.getClosedTime() || WebStorage.setClosedTime(Constants.DEFAULT.CLOSED_TIME);
     WebStorage.getDayOfTheWeek() || WebStorage.setDayOfTheWeek(Constants.DEFAULT.DAY_OF_THE_WEEK);
@@ -72,12 +75,16 @@ export default class Chikury {
       clearInterval(this.timeUpdateInterval);
     }
 
-    const saboriTime = TimeCalculator.calcTotalSaboriTime(new Date());
     const tab = tabs.getCurrentSaboriTab();
+    const minutes = WebStorage.getProgressedMinutes();
+    const seconds = WebStorage.getProgressedSeconds();
 
-    this.postChikury(saboriTime, tab.title);
+    this.postChikury({
+      minutes,
+      seconds
+    }, tab.title);
 
-    BadgeManager.updateMinutes(saboriTime.minutes);
+    BadgeManager.updateMinutes(minutes);
     BadgeManager.turnOn();
 
     this.timeUpdateInterval = setInterval(this.intervalUpdater.bind(this), 10000); // todo intervalの間隔を広くするように要修正（30000ぐらい)
@@ -93,8 +100,7 @@ export default class Chikury {
     }
 
     const lastUpdateMinutes = WebStorage.getProgressedMinutes();
-    const lastUpdateDate = WebStorage.getLastUpdateDate() ? new Date(WebStorage.getLastUpdateDate()) : null
-    const saboriTime = TimeCalculator.calcTotalSaboriTime(lastUpdateDate);
+    const saboriTime = TimeCalculator.calcTotalSaboriTime();
     const tab = tabs.getCurrentSaboriTab();
 
     // 経過分が変わったときだけ更新
@@ -114,9 +120,9 @@ export default class Chikury {
 
     clearInterval(this.timeUpdateInterval)
 
-    // TODO: これなにしてるんだっけ？
     const saboriTime = TimeCalculator.calcTotalSaboriTime();
-    // TODO: これなにしてるんだっけ？
+    WebStorage.setLastUpdateDate(new Date().toISOString());
+    WebStorage.setProgressedMinutes(saboriTime.minutes);
     WebStorage.setProgressedSeconds(saboriTime.seconds);
 
     BadgeManager.turnOff();
@@ -129,12 +135,11 @@ export default class Chikury {
       .post({ minutes: saboriTime.minutes, title })
       .then(() => {
         WebStorage.setLastUpdateDate(new Date().toISOString());
+        WebStorage.setProgressedMinutes(saboriTime.minutes);
+        WebStorage.setProgressedSeconds(saboriTime.seconds);
         this.isChikurying = true;
       }).catch(() => {
         // NOP
-      }).finally(() => {
-        WebStorage.setProgressedMinutes(saboriTime.minutes);
-        WebStorage.setProgressedSeconds(saboriTime.seconds);
       });
   }
 

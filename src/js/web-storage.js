@@ -77,6 +77,8 @@ export default class WebStorage {
   static _getItem(key, { isNumber = false, isObject = false } = {}) {
     const value = localStorage.getItem(key);
 
+    if (value === null) return null;
+
     if (isNumber) return parseInt(value, 10);
     if (isObject) return JSON.parse(value);
     return value;
