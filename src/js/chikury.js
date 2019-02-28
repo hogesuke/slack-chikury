@@ -87,7 +87,7 @@ export default class Chikury {
     BadgeManager.updateMinutes(minutes);
     BadgeManager.turnOn();
 
-    this.timeUpdateInterval = setInterval(this.intervalUpdater.bind(this), 10000); // todo intervalの間隔を広くするように要修正（30000ぐらい)
+    this.timeUpdateInterval = setInterval(this.intervalUpdater.bind(this), 30000);
   }
 
   async intervalUpdater() {
