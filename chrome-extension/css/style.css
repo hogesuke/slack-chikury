@@ -13,10 +13,13 @@ header {
     font-size: 16px;
     letter-spacing: 0.5px; }
 
+main {
+  padding: 8px 18px; }
+
 form {
   padding: 10px 0; }
 
-input, textarea, label {
+input, textarea, label, .label {
   color: #333; }
 
 input {
@@ -28,18 +31,15 @@ input {
     border-bottom: solid 2px #3379d6;
     outline: 0; }
 
-.form-container {
-  padding: 8px 18px; }
-
 .form-field {
   position: relative; }
 
-.form-label {
+.form-label, .label {
   display: block;
   margin-bottom: 5px;
   font-size: 12px;
   color: #777; }
-  .form-label.extend-margin {
+  .form-label.extend-margin, .label.extend-margin {
     margin-bottom: 10px; }
 
 .token-form .input-token {
@@ -59,11 +59,14 @@ input {
 
 .url-form .textarea-urls {
   width: 330px;
-  height: 200px;
+  height: 150px;
   font-size: 12px;
   resize: vertical;
   border: solid 2px rgba(0, 0, 0, 0.3); }
   .url-form .textarea-urls:focus {
     border: solid 2px #3379d6;
     outline: 0; }
+
+.credit {
+  padding: 10px 0; }
 
