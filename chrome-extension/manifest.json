@@ -2,7 +2,7 @@
   "name"   : "slack-chikury",
   "version": "0.0.1",
   "manifest_version": 2,
-  "description": "Twitter等でサボっていることをSlackにチクってもらう拡張です。",
+  "description": "Twitterなどで仕事中にサボっていることをSlackにチクってもらう拡張です。指定したWebページを開いたら、Slackのstatusにサボり中であることを大公開します。",
   "icons": {
     "48" : "img/icon48.png",
     "128": "img/icon128.png"
