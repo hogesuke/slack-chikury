@@ -31,13 +31,7 @@ export default class Chikury {
     BadgeManager.updateMinutes(WebStorage.getProgressedMinutes());
     BadgeManager.turnOff();
 
-    const tabs = await SaboriDetector.detectSaboriTabs();
-
-    if (!tabs.isEmpty() && TimeKeeper.isApplied()) {
-      this.startSabori(tabs);
-    } else {
-      this.exitSabori();
-    }
+    this.judge();
   }
 
   async onTabUpdated(tabId, changeInfo) {
@@ -45,18 +39,28 @@ export default class Chikury {
 
     console.log('changeInfo', changeInfo);
 
-    const tabs = await SaboriDetector.detectSaboriTabs();
-
-    if (!tabs.isEmpty() && TimeKeeper.isApplied()) {
-      this.startSabori(tabs);
-    } else {
-      this.exitSabori();
-    }
+    this.judge();
   }
 
   async onTabRemoved() {
     const tabs = await SaboriDetector.detectSaboriTabs();
     if (tabs.isEmpty()) {
+      this.exitSabori();
+    }
+  }
+
+  async judge() {
+    const tabs = await SaboriDetector.detectSaboriTabs();
+
+    if (TimeKeeper.hasChangedDate()) {
+      WebStorage.setLastUpdateDate(new Date().toISOString());
+      WebStorage.setProgressedMinutes(0);
+      WebStorage.setProgressedSeconds(0);
+    }
+
+    if (!tabs.isEmpty() && TimeKeeper.isApplied()) {
+      this.startSabori(tabs);
+    } else {
       this.exitSabori();
     }
   }
@@ -100,7 +104,7 @@ export default class Chikury {
     }
 
     const lastUpdateMinutes = WebStorage.getProgressedMinutes();
-    const saboriTime = TimeCalculator.calcTotalSaboriTime();
+    const saboriTime = TimeKeeper.hasChangedDate() ? TimeCalculator.initialSaboriTime : TimeCalculator.calcTotalSaboriTime();
     const tab = tabs.getCurrentSaboriTab();
 
     // 経過分が変わったときだけ更新
@@ -120,7 +124,7 @@ export default class Chikury {
 
     clearInterval(this.timeUpdateInterval)
 
-    const saboriTime = TimeCalculator.calcTotalSaboriTime();
+    const saboriTime = TimeKeeper.hasChangedDate() ? TimeCalculator.initialSaboriTime : TimeCalculator.calcTotalSaboriTime();
     WebStorage.setLastUpdateDate(new Date().toISOString());
     WebStorage.setProgressedMinutes(saboriTime.minutes);
     WebStorage.setProgressedSeconds(saboriTime.seconds);

@@ -7,6 +7,12 @@ export default class TimeKeeper {
     return this._isWithinTimeRange(current) && this._isTargetDayOfTheWeek(current);
   }
 
+  static hasChangedDate () {
+    const lastUpdateDate = new Date(WebStorage.getLastUpdateDate());
+    const currentDate = new Date();
+    return this._getYYYYMD(lastUpdateDate) !== this._getYYYYMD(currentDate);
+  }
+
   static _isWithinTimeRange(date) {
     const openTime = WebStorage.getOpenTime();
     const closedTime = WebStorage.getClosedTime();
@@ -42,5 +48,10 @@ export default class TimeKeeper {
       hours: parseInt(time[0]),
       minutes: parseInt(time[1])
     }
+  }
+
+  static _getYYYYMD(date) {
+    if (!date) return '';
+    return '' + date.getFullYear() + (date.getMonth() + 1) + date.getDate();
   }
 }
